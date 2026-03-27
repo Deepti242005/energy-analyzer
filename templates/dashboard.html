@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Energy Dashboard</title>
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .grid {
+            display: flex;
+            gap: 15px;
+        }
+
+        .box {
+            flex: 1;
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+            text-align: center;
+        }
+
+        .blue { background: #007bff; }
+        .green { background: #28a745; }
+        .orange { background: #fd7e14; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background: #007bff;
+            color: white;
+        }
+
+        .insight {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .saving {
+            color: green;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            background: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .nav {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        canvas {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>⚡ Energy Dashboard</h1>
+
+<!-- SUMMARY BOXES -->
+<div class="grid">
+    <div class="box blue">
+        <h3>Total Units</h3>
+        <p>{{ result.total_units }}</p>
+    </div>
+
+    <div class="box green">
+        <h3>Predicted Units</h3>
+        <p>{{ result.predicted_units }}</p>
+    </div>
+
+    <div class="box orange">
+        <h3>Estimated Cost</h3>
+        <p>₹{{ result.estimated_cost }}</p>
+    </div>
+</div>
+
+<!-- TABLE -->
+<div class="card">
+<h2>📋 Usage Records</h2>
+
+<table>
+<tr>
+    <th>ID</th>
+    <th>Appliance</th>
+    <th>Units</th>
+    <th>Date</th>
+    <th>Action</th>
+</tr>
+
+{% for d in data %}
+<tr>
+    <td>{{ d.id }}</td>
+    <td>{{ d.appliance }}</td>
+    <td>{{ d.units }}</td>
+    <td>{{ d.date }}</td>
+    <td><a class="btn" href="/delete/{{ d.id }}">Delete</a></td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+<!-- INSIGHTS -->
+<div class="card">
+<h2>⚠ Insights</h2>
+
+<ul>
+{% for i in result.insights %}
+<li class="insight">{{ i }}</li>
+{% endfor %}
+</ul>
+</div>
+
+<!-- SAVING TIP -->
+<div class="card">
+<h2>💡 Smart Recommendation</h2>
+<p class="saving">{{ result.saving_tip }}</p>
+</div>
+
+<!-- CHART -->
+<div class="card">
+<h2>📊 Usage Chart</h2>
+<canvas id="chart"></canvas>
+</div>
+<div class="card">
+<h2>⚙️ Appliance Efficiency</h2>
+
+<table>
+<tr>
+    <th>Appliance</th>
+    <th>Units per Hour</th>
+</tr>
+
+{% for app, score in result.efficiency.items() %}
+<tr>
+    <td>{{ app }}</td>
+    <td>{{ score }}</td>
+</tr>
+{% endfor %}
+
+</table>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+<a href="/">⬅ Back</a> |
+<form action="/reset" method="post" style="display:inline;">
+    <button onclick="return confirm('Are you sure you want to delete all data?')">
+        🔄 Reset
+    </button>
+</form>
+<a href="/report">Download Report</a>
+</div>
+
+</div>
+
+<!-- CHART JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const labels = {{ data | map(attribute='appliance') | list | tojson }};
+const values = {{ data | map(attribute='units') | list | tojson }};
+
+new Chart(document.getElementById("chart"), {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Energy Usage',
+            data: values
+        }]
+    }
+});
+</script>
+</body>
+</html>
