@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+<style>
+body {
+    margin:0;
+    font-family:Arial;
+    background:url("https://img.freepik.com/premium-psd/3d-electric-bill-scene-with-solar-energy-house_643173-21.jpg?semt=ais_hybrid") no-repeat center center fixed;
+    background-size:cover;
+}
+.overlay {
+    position:fixed;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.6);
+}
+.container {
+    position:relative;
+    z-index:2;
+    max-width:1000px;
+    margin:auto;
+    padding:20px;
+    color:white;
+}
+.card {
+    background:rgba(255,255,255,0.1);
+    backdrop-filter:blur(10px);
+    padding:20px;
+    margin:15px 0;
+    border-radius:10px;
+}
+.grid { display:flex; gap:10px;}
+.box {
+    flex:1;
+    padding:15px;
+    text-align:center;
+    border-radius:8px;
+}
+.blue { background:#007bff;}
+.green { background:#28a745;}
+.orange { background:#fd7e14;}
+table { width:100%; border-collapse:collapse;}
+th,td { padding:10px; border:1px solid #ddd;}
+th { background:#007bff;}
+.btn { background:red; color:white; padding:5px;}
+.nav { text-align:center; margin-top:20px;}
+a { color:white; margin:0 10px;}
+</style>
+</head>
+
+<body>
+
+<div class="overlay"></div>
+
+<div class="container">
+
+<h1>⚡ Energy Dashboard</h1>
+
+<div class="grid">
+<div class="box blue">Total: {{ result.total_units }}</div>
+<div class="box green">Predicted: {{ result.predicted_units }}</div>
+<div class="box orange">₹{{ result.estimated_cost }}</div>
+</div>
+
+<div class="card">
+<h2>Usage Records</h2>
+<table>
+<tr><th>ID</th><th>Appliance</th><th>Units</th><th>Date</th><th>Action</th></tr>
+{% for d in data %}
+<tr>
+<td>{{ d.id }}</td>
+<td>{{ d.appliance }}</td>
+<td>{{ d.units }}</td>
+<td>{{ d.date }}</td>
+<td><a class="btn" href="/delete/{{ d.id }}">Delete</a></td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+<div class="card">
+<h2>Insights</h2>
+<ul>
+{% for i in result.insights %}
+<li>{{ i }}</li>
+{% endfor %}
+</ul>
+</div>
+
+<div class="card">
+<h2>💡 Recommendation</h2>
+<p>{{ result.saving_tip }}</p>
+</div>
+
+<div class="card">
+<h2>Efficiency</h2>
+<ul>
+{% for k,v in result.efficiency.items() %}
+<li>{{ k }} → {{ v }} units/hour</li>
+{% endfor %}
+</ul>
+</div>
+
+<div class="nav">
+<a href="/">⬅ Home</a>
+<a href="/reset">Reset</a>
+<a href="/report">Report</a>
+</div>
+
+</div>
+
+</body>
+</html>

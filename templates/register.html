@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Register</title>
+<style>
+body {
+    margin:0;
+    font-family:Arial;
+    background:url("https://img.freepik.com/premium-psd/3d-electric-bill-scene-with-solar-energy-house_643173-21.jpg?semt=ais_hybrid") no-repeat center center fixed;
+    background-size:cover;
+}
+.overlay {
+    position:fixed;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.6);
+}
+.container {
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+.card {
+    background:rgba(255,255,255,0.1);
+    backdrop-filter:blur(10px);
+    padding:30px;
+    border-radius:10px;
+    width:300px;
+    color:white;
+}
+input {
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+}
+button {
+    width:100%;
+    padding:10px;
+    background:#28a745;
+    border:none;
+    color:white;
+}
+a { color:white; display:block; margin-top:10px; text-align:center;}
+</style>
+</head>
+<body>
+
+<div class="overlay"></div>
+
+<div class="container">
+<div class="card">
+<h2>Register</h2>
+<form method="post">
+<input name="username" placeholder="Username">
+<input name="password" type="password" placeholder="Password">
+<button>Register</button>
+</form>
+<a href="/login">⬅ Back to Login</a>
+</div>
+</div>
+
+</body>
+</html>
